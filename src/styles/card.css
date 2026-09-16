@@ -113,7 +113,8 @@
 
 .card__shine,
 .card__glare {
-  will-change: opacity, background-position, filter;
+  /* acota el repaint a la capa: clave para 60fps en GPU móvil */
+  contain: layout paint;
 }
 
 .card__shine {
@@ -170,4 +171,13 @@
 
   opacity: var(--card-opacity);
   mix-blend-mode: overlay;
+}
+
+/* los pseudo-elementos animan background-position cada frame:
+   promoverlos a capas propias evita el repaint de la textura */
+.card__shine::before,
+.card__shine::after,
+.card__glare::after {
+  will-change: background-position;
+  transform: translateZ(1px);
 }

@@ -1,4 +1,4 @@
-import { clamp, round, adjust } from "./math.js";
+import { clamp, adjust } from "./math.js";
 
 // Grados de inclinación que recorren todo el rango del efecto
 const LIMIT_X = 16; // izquierda/derecha
@@ -34,25 +34,41 @@ export function createHoloController(card, { onStatus } = {}) {
   let timerAviso = null;
   let listenerPermiso = null;
   let listenerRotacion = null;
+  // últimos valores escritos en CSS (para no reescribir lo que no cambió)
+  const ultimo = { px: null, py: null, rdc: null };
 
   const necesitaPermiso =
     typeof DeviceOrientationEvent !== "undefined" &&
     typeof DeviceOrientationEvent.requestPermission === "function";
 
-  /** Escribe las variables CSS de la carta a partir de la posición actual. */
+  /** Escribe las variables CSS de la carta a partir de la posición actual.
+      Solo toca las que cambiaron: menos invalidaciones de estilo por frame. */
   const aplicarVars = () => {
     const px = clamp(current.x);
     const py = clamp(current.y);
     const desdeCentro = clamp(Math.hypot(px - 50, py - 50) / 50, 0, 1);
 
-    card.style.setProperty("--pointer-x", `${round(px)}%`);
-    card.style.setProperty("--pointer-y", `${round(py)}%`);
-    card.style.setProperty("--pointer-from-center", round(desdeCentro));
-    card.style.setProperty("--pointer-from-top", round(py / 100));
-    card.style.setProperty("--pointer-from-left", round(px / 100));
-    card.style.setProperty("--background-x", `${round(adjust(px, 0, 100, 37, 63))}%`);
-    card.style.setProperty("--background-y", `${round(adjust(py, 0, 100, 33, 67))}%`);
-    card.style.setProperty("--card-opacity", "1");
+    // 1 decimal basta para un efecto fluido y reduce invalidaciones
+    const rx = Math.round(px * 10) / 10;
+    const ry = Math.round(py * 10) / 10;
+    const rdc = Math.round(desdeCentro * 100) / 100;
+
+    if (rx !== ultimo.px) {
+      ultimo.px = rx;
+      card.style.setProperty("--pointer-x", `${rx}%`);
+      card.style.setProperty("--pointer-from-left", `${rx / 100}`);
+      card.style.setProperty("--background-x", `${Math.round(37 + (rx / 100) * 26)}%`);
+    }
+    if (ry !== ultimo.py) {
+      ultimo.py = ry;
+      card.style.setProperty("--pointer-y", `${ry}%`);
+      card.style.setProperty("--pointer-from-top", `${ry / 100}`);
+      card.style.setProperty("--background-y", `${Math.round(33 + (ry / 100) * 34)}%`);
+    }
+    if (rdc !== ultimo.rdc) {
+      ultimo.rdc = rdc;
+      card.style.setProperty("--pointer-from-center", `${rdc}`);
+    }
   };
 
   /** Bucle de animación con suavizado exponencial (independiente de FPS). */
