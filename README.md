@@ -2,6 +2,8 @@
 
 PoC de app móvil (PWA) que emula el efecto holográfico de las cartas de Pokémon / Yu-Gi-Oh. La carta permanece **fija** en pantalla; al inclinar el celular, los brillos, arcoíris y reflejos se desplazan como al mirar una carta holo real desde distintos ángulos.
 
+**Demo en vivo:** <https://leonardocriado.github.io/carta-holo/>
+
 ## Cómo funciona
 
 - Los efectos holo (capas `card__shine` y `card__glare`) son CSS puro, portados de [simeydotme/pokemon-cards-css](https://github.com/simeydotme/pokemon-cards-css).

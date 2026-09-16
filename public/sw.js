@@ -1,20 +1,22 @@
 // Service worker mínimo: cache-first para los assets de la app.
 const CACHE = "carta-holo-v2";
+// Rutas relativas al scope del SW: funciona en la raíz (dev) y bajo
+// un subpath (GitHub Pages).
 const ASSETS = [
-  "/",
-  "/index.html",
-  "/manifest.webmanifest",
-  "/assets/card.png",
-  "/assets/cosmos-bottom.png",
-  "/assets/cosmos-middle-trans.png",
-  "/assets/cosmos-top-trans.png",
-  "/assets/glitter.png",
-  "/assets/illusion.png",
-  "/assets/illusion-mask.png",
-  "/assets/vmaxbg.jpg",
-  "/icons/icon-192.png",
-  "/icons/icon-512.png",
-  "/icons/icon-512-maskable.png",
+  "./",
+  "./index.html",
+  "./manifest.webmanifest",
+  "./assets/card.png",
+  "./assets/cosmos-bottom.png",
+  "./assets/cosmos-middle-trans.png",
+  "./assets/cosmos-top-trans.png",
+  "./assets/glitter.png",
+  "./assets/illusion.png",
+  "./assets/illusion-mask.png",
+  "./assets/vmaxbg.jpg",
+  "./icons/icon-192.png",
+  "./icons/icon-512.png",
+  "./icons/icon-512-maskable.png",
 ];
 
 self.addEventListener("install", (e) => {

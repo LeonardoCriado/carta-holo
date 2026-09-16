@@ -35,7 +35,7 @@ btnRecentrar.addEventListener("click", () => {
 // Service worker (solo en contexto seguro: https o localhost)
 if ("serviceWorker" in navigator && window.isSecureContext) {
   window.addEventListener("load", () => {
-    navigator.serviceWorker.register("/sw.js").catch(() => {
+    navigator.serviceWorker.register("sw.js").catch(() => {
       // el SW es opcional para la PoC; ignorar errores de registro
     });
   });
