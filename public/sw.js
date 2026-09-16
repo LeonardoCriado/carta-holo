@@ -1,5 +1,5 @@
 // Service worker mínimo: cache-first para los assets de la app.
-const CACHE = "carta-holo-v1";
+const CACHE = "carta-holo-v2";
 const ASSETS = [
   "/",
   "/index.html",
@@ -14,6 +14,7 @@ const ASSETS = [
   "/assets/vmaxbg.jpg",
   "/icons/icon-192.png",
   "/icons/icon-512.png",
+  "/icons/icon-512-maskable.png",
 ];
 
 self.addEventListener("install", (e) => {
@@ -33,6 +34,18 @@ self.addEventListener("activate", (e) => {
 self.addEventListener("fetch", (e) => {
   if (e.request.method !== "GET") return;
   e.respondWith(
-    caches.match(e.request).then((hit) => hit || fetch(e.request))
+    caches.match(e.request).then(
+      (hit) =>
+        hit ||
+        fetch(e.request).then((res) => {
+          // cachear en runtime las respuestas same-origin exitosas:
+          // tras la primera visita, la app funciona offline
+          if (res.ok && res.type === "basic") {
+            const copia = res.clone();
+            caches.open(CACHE).then((c) => c.put(e.request, copia));
+          }
+          return res;
+        })
+    )
   );
 });

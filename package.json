@@ -6,7 +6,7 @@
   "description": "PoC: efecto holográfico de cartas controlado por el giroscopio del celular",
   "scripts": {
     "dev": "vite --host",
-    "dev:https": "cross-env HTTPS=1 vite --host || HTTPS=1 vite --host",
+    "dev:https": "HTTPS=1 vite --host",
     "build": "vite build",
     "preview": "vite preview --host"
   },

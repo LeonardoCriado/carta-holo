@@ -30,6 +30,10 @@ export function createHoloController(card, { onStatus } = {}) {
   let sensorActivo = false;
   let usandoPuntero = false;
   let iniciado = false;
+  let timerFallback = null;
+  let timerAviso = null;
+  let listenerPermiso = null;
+  let listenerRotacion = null;
 
   const necesitaPermiso =
     typeof DeviceOrientationEvent !== "undefined" &&
@@ -119,13 +123,13 @@ export function createHoloController(card, { onStatus } = {}) {
   const attachSensor = () => {
     window.addEventListener("deviceorientation", handleOrientation, true);
     // algunos dispositivos solo emiten el evento absoluto
-    setTimeout(() => {
+    timerFallback = setTimeout(() => {
       if (!sensorActivo) {
         window.addEventListener("deviceorientationabsolute", handleOrientation, true);
       }
     }, 1500);
     // si no llegan datos, avisar que el fallback es arrastrar
-    setTimeout(() => {
+    timerAviso = setTimeout(() => {
       if (!sensorActivo) {
         onStatus?.("error", "Sin datos de sensores — arrastrá sobre la carta");
       }
@@ -139,24 +143,32 @@ export function createHoloController(card, { onStatus } = {}) {
 
     if (necesitaPermiso) {
       onStatus?.("info", "Tocá la pantalla para activar los sensores");
-      document.addEventListener(
-        "pointerdown",
-        async () => {
-          try {
-            const resultado = await DeviceOrientationEvent.requestPermission();
-            if (resultado === "granted") {
-              attachSensor();
-            } else {
-              onStatus?.("error", "Permiso de sensores denegado — arrastrá sobre la carta");
-            }
-          } catch {
-            onStatus?.("error", "No se pudieron activar los sensores");
+      listenerPermiso = async () => {
+        try {
+          const resultado = await DeviceOrientationEvent.requestPermission();
+          if (resultado === "granted") {
+            attachSensor();
+          } else {
+            onStatus?.("error", "Permiso de sensores denegado — arrastrá sobre la carta");
           }
-        },
-        { once: true }
-      );
+        } catch {
+          onStatus?.("error", "No se pudieron activar los sensores");
+        }
+      };
+      document.addEventListener("pointerdown", listenerPermiso, { once: true });
     } else {
       attachSensor();
+    }
+
+    // al rotar la pantalla, la calibración queda referida al marco anterior:
+    // descartarla para que la próxima lectura del sensor recentre el efecto
+    listenerRotacion = () => {
+      base = null;
+    };
+    if (screen.orientation?.addEventListener) {
+      screen.orientation.addEventListener("change", listenerRotacion);
+    } else {
+      window.addEventListener("orientationchange", listenerRotacion);
     }
 
     card.addEventListener("pointermove", handlePointer);
@@ -174,6 +186,20 @@ export function createHoloController(card, { onStatus } = {}) {
   };
 
   const stop = () => {
+    clearTimeout(timerFallback);
+    clearTimeout(timerAviso);
+    if (listenerPermiso) {
+      document.removeEventListener("pointerdown", listenerPermiso);
+      listenerPermiso = null;
+    }
+    if (listenerRotacion) {
+      if (screen.orientation?.removeEventListener) {
+        screen.orientation.removeEventListener("change", listenerRotacion);
+      } else {
+        window.removeEventListener("orientationchange", listenerRotacion);
+      }
+      listenerRotacion = null;
+    }
     window.removeEventListener("deviceorientation", handleOrientation, true);
     window.removeEventListener("deviceorientationabsolute", handleOrientation, true);
     card.removeEventListener("pointermove", handlePointer);

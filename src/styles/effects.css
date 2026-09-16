@@ -460,12 +460,6 @@
 
 /* ============ VMAX ============ */
 
-.card[data-rarity="rare holo vmax"] .card__shine,
-.card[data-rarity="rare holo vmax"] .card__shine::after {
-  --foil: url("/assets/vmaxbg.jpg");
-  --imgsize: 60% 30%;
-}
-
 .card[data-rarity="rare holo vmax"] .card__shine {
   --space: 6%;
   --angle: 133deg;
@@ -558,4 +552,12 @@
     );
 
   opacity: calc((0.2 * var(--card-opacity)) + var(--card-opacity) * var(--pointer-from-center) * 0.8);
+}
+
+/* textura del VMAX: va al final para ganar la cascada sobre --imgsize: cover
+   (en el repo original la gana por especificidad :not(.masked)) */
+.card[data-rarity="rare holo vmax"] .card__shine,
+.card[data-rarity="rare holo vmax"] .card__shine::after {
+  --foil: url("/assets/vmaxbg.jpg");
+  --imgsize: 60% 30%;
 }
