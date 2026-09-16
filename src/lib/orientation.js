@@ -37,6 +37,9 @@ export function createHoloController(card, { onStatus } = {}) {
   // últimos valores escritos en CSS (para no reescribir lo que no cambió)
   const ultimo = { px: null, py: null, rdc: null };
 
+  // --card-opacity no cambia nunca: se escribe una sola vez
+  card.style.setProperty("--card-opacity", "1");
+
   const necesitaPermiso =
     typeof DeviceOrientationEvent !== "undefined" &&
     typeof DeviceOrientationEvent.requestPermission === "function";
