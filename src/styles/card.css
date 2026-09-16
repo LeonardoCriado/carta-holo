@@ -1,0 +1,173 @@
+/*
+  Estructura base de la carta + efectos holo.
+  Portado y simplificado de https://github.com/simeydotme/pokemon-cards-css
+  (public/css/cards/base.css, cards.css y los efectos individuales).
+  La carta queda fija en pantalla: solo se mueven las capas de brillo/holo
+  mediante las variables --pointer-* y --background-*.
+*/
+
+:root {
+  --card-aspect: 0.718;
+  --card-radius: 4.55% / 3.5%;
+  --card-edge: hsl(47, 100%, 78%);
+  --card-glow: hsl(175, 100%, 90%);
+
+  --sunpillar-1: hsl(2, 100%, 73%);
+  --sunpillar-2: hsl(53, 100%, 69%);
+  --sunpillar-3: hsl(93, 100%, 69%);
+  --sunpillar-4: hsl(176, 100%, 76%);
+  --sunpillar-5: hsl(228, 100%, 74%);
+  --sunpillar-6: hsl(283, 100%, 73%);
+
+  --sunpillar-clr-1: var(--sunpillar-1);
+  --sunpillar-clr-2: var(--sunpillar-2);
+  --sunpillar-clr-3: var(--sunpillar-3);
+  --sunpillar-clr-4: var(--sunpillar-4);
+  --sunpillar-clr-5: var(--sunpillar-5);
+  --sunpillar-clr-6: var(--sunpillar-6);
+
+  --glitter: url("/assets/glitter.png");
+  --glittersize: 25%;
+
+  --space: 5%;
+  --angle: 133deg;
+  --imgsize: cover;
+
+  --red: #f80e35;
+  --yellow: #eedf10;
+  --green: #21e985;
+  --blue: #0dbde9;
+  --violet: #c929f1;
+
+  /* La carta de la PoC es full-art: el holo cubre toda la carta */
+  --clip: none;
+}
+
+.card {
+  /* capa propia con aceleración por hardware */
+  transform: translate3d(0px, 0px, 0.01px);
+  will-change: transform;
+  transform-style: preserve-3d;
+}
+
+.card,
+.card * {
+  /* truco de antialiasing */
+  outline: 1px solid transparent;
+}
+
+.card.fire { --card-glow: hsl(9, 81%, 59%); }
+
+.card,
+.card__rotator {
+  aspect-ratio: var(--card-aspect);
+  border-radius: var(--card-radius);
+}
+
+.card__rotator {
+  display: grid;
+  perspective: 600px;
+  transform-origin: center;
+  transform-style: preserve-3d;
+  /* la carta no rota: las variables quedan en 0deg */
+  transform: rotateY(var(--rotate-x, 0deg)) rotateX(var(--rotate-y, 0deg));
+  box-shadow:
+    0 0 3px -1px rgba(255, 255, 255, 0.4),
+    0 0 3px 1px var(--card-edge),
+    0 0 12px 2px var(--card-glow),
+    0px 10px 20px -5px black,
+    0 0 40px -30px var(--card-glow),
+    0 0 50px -20px var(--card-glow);
+}
+
+.card__rotator * {
+  width: 100%;
+  display: grid;
+  grid-area: 1 / 1;
+  aspect-ratio: var(--card-aspect);
+  border-radius: var(--card-radius);
+  transform-style: preserve-3d;
+  pointer-events: none;
+  overflow: hidden;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.card__rotator img {
+  height: auto;
+  transform: translate3d(0px, 0px, 0.01px);
+}
+
+.card__front,
+.card__front * {
+  backface-visibility: hidden;
+}
+
+.card__front {
+  transform: translate3d(0px, 0px, 0.01px);
+}
+
+/*
+  Capas de brillo (shine) y reflejo (glare)
+*/
+
+.card__shine,
+.card__glare {
+  will-change: opacity, background-position, filter;
+}
+
+.card__shine {
+  display: grid;
+  transform: translateZ(1px);
+  overflow: hidden;
+  z-index: 3;
+
+  background: transparent;
+  background-size: cover;
+  background-position: center;
+
+  filter: brightness(0.85) contrast(2.75) saturate(0.65);
+  mix-blend-mode: color-dodge;
+
+  opacity: var(--card-opacity);
+}
+
+.card__shine::before,
+.card__shine::after {
+  --sunpillar-clr-1: var(--sunpillar-5);
+  --sunpillar-clr-2: var(--sunpillar-6);
+  --sunpillar-clr-3: var(--sunpillar-1);
+  --sunpillar-clr-4: var(--sunpillar-2);
+  --sunpillar-clr-5: var(--sunpillar-3);
+  --sunpillar-clr-6: var(--sunpillar-4);
+
+  grid-area: 1 / 1;
+  transform: translateZ(1px);
+  border-radius: var(--card-radius);
+}
+
+.card__shine::after {
+  --sunpillar-clr-1: var(--sunpillar-6);
+  --sunpillar-clr-2: var(--sunpillar-1);
+  --sunpillar-clr-3: var(--sunpillar-2);
+  --sunpillar-clr-4: var(--sunpillar-3);
+  --sunpillar-clr-5: var(--sunpillar-4);
+  --sunpillar-clr-6: var(--sunpillar-5);
+
+  transform: translateZ(1.2px);
+}
+
+.card__glare {
+  transform: translateZ(1.41px);
+  overflow: hidden;
+
+  background-image: radial-gradient(
+    farthest-corner circle at var(--pointer-x) var(--pointer-y),
+    hsla(0, 0%, 100%, 0.8) 10%,
+    hsla(0, 0%, 100%, 0.65) 20%,
+    hsla(0, 0%, 0%, 0.5) 90%
+  );
+
+  opacity: var(--card-opacity);
+  mix-blend-mode: overlay;
+}

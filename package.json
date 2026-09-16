@@ -1,0 +1,17 @@
+{
+  "name": "carta-holo",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "description": "PoC: efecto holográfico de cartas controlado por el giroscopio del celular",
+  "scripts": {
+    "dev": "vite --host",
+    "dev:https": "cross-env HTTPS=1 vite --host || HTTPS=1 vite --host",
+    "build": "vite build",
+    "preview": "vite preview --host"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-basic-ssl": "^1.2.0",
+    "vite": "^6.0.0"
+  }
+}

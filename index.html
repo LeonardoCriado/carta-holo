@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover"
+    />
+    <meta name="theme-color" content="#10131c" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <title>Carta Holo</title>
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <link rel="icon" type="image/png" href="/icons/icon-192.png" />
+    <link rel="apple-touch-icon" href="/icons/icon-192.png" />
+  </head>
+  <body>
+    <main class="escenario">
+      <h1 class="titulo">Carta Holo</h1>
+
+      <div
+        id="carta"
+        class="card fire"
+        data-rarity="rare holo"
+        data-subtypes="vmax"
+        data-supertype="pokémon"
+      >
+        <div class="card__rotator">
+          <div class="card__front">
+            <img
+              src="/assets/card.png"
+              alt="Carta Charizard VMAX"
+              width="660"
+              height="921"
+              draggable="false"
+            />
+            <div class="card__shine"></div>
+            <div class="card__glare"></div>
+          </div>
+        </div>
+      </div>
+
+      <p id="estado-sensores" class="estado" role="status">Iniciando sensores…</p>
+
+      <nav class="controles" aria-label="Controles">
+        <div class="efectos" role="group" aria-label="Tipo de efecto holo">
+          <button class="efecto activo" data-effect="rare holo">Holo</button>
+          <button class="efecto" data-effect="rare holo cosmos">Cosmos</button>
+          <button class="efecto" data-effect="rare shiny v">Shiny V</button>
+          <button class="efecto" data-effect="rare rainbow">Arcoíris</button>
+          <button class="efecto" data-effect="rare holo vmax">VMAX</button>
+        </div>
+        <button id="btn-recentrar" class="recentrar" type="button">
+          ⟳ Recentrar
+        </button>
+      </nav>
+    </main>
+
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>

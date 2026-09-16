@@ -1,0 +1,561 @@
+/*
+  Efectos holo portados de pokemon-cards-css.
+  Se activan según el atributo data-rarity de la carta.
+  Rutas de texturas adaptadas a /assets/.
+*/
+
+/* ============ HOLO CLÁSICO (galaxia) ============ */
+
+.card[data-rarity="rare holo"] .card__shine {
+  --scanlines-space: 1px;
+  --scanlines-light: #666;
+  --scanlines-dark: black;
+
+  --bars: 3%;
+  --bar-color: hsla(0, 0%, 70%, 1);
+  --bar-bg: hsla(0, 0%, 0%, 1);
+
+  clip-path: var(--clip);
+
+  background-image:
+    repeating-linear-gradient(110deg,
+      var(--violet), var(--blue), var(--green), var(--yellow), var(--red),
+      var(--violet), var(--blue), var(--green), var(--yellow), var(--red),
+      var(--violet), var(--blue), var(--green), var(--yellow), var(--red)
+    ),
+    repeating-linear-gradient(90deg,
+      var(--scanlines-dark) calc(var(--scanlines-space) * 0), var(--scanlines-dark) calc(var(--scanlines-space) * 2),
+      var(--scanlines-light) calc(var(--scanlines-space) * 2), var(--scanlines-light) calc(var(--scanlines-space) * 4)
+    );
+
+  background-position:
+    calc(((50% - var(--background-x)) * 2.6) + 50%) calc(((50% - var(--background-y)) * 3.5) + 50%),
+    center center;
+
+  background-size:
+    400% 400%,
+    cover;
+
+  background-blend-mode: overlay;
+  filter: brightness(1.1) contrast(1.1) saturate(1.2);
+  mix-blend-mode: color-dodge;
+}
+
+.card[data-rarity="rare holo"] .card__shine::before {
+  content: "";
+
+  background-image:
+    repeating-linear-gradient(90deg,
+      var(--bar-bg) calc(var(--bars) * 2),
+      var(--bar-color) calc(var(--bars) * 3),
+      var(--bar-bg) calc(var(--bars) * 3.5),
+      var(--bar-color) calc(var(--bars) * 4),
+      var(--bar-bg) calc(var(--bars) * 5),
+      var(--bar-bg) calc(var(--bars) * 14)
+    ),
+    repeating-linear-gradient(90deg,
+      var(--bar-bg) calc(var(--bars) * 2),
+      var(--bar-color) calc(var(--bars) * 3),
+      var(--bar-bg) calc(var(--bars) * 3.5),
+      var(--bar-color) calc(var(--bars) * 4),
+      var(--bar-bg) calc(var(--bars) * 5),
+      var(--bar-bg) calc(var(--bars) * 10)
+    );
+
+  background-position:
+    calc((((50% - var(--background-x)) * 1.65) + 50%) + (var(--background-y) * 0.5)) var(--background-x),
+    calc((((50% - var(--background-x)) * -0.9) + 50%) - (var(--background-y) * 0.75)) var(--background-y);
+
+  background-size:
+    200% 200%,
+    200% 200%;
+
+  background-blend-mode: screen;
+  filter: brightness(1.15) contrast(1.1);
+  mix-blend-mode: hard-light;
+}
+
+.card[data-rarity="rare holo"] .card__shine::after {
+  content: "";
+
+  background-image:
+    radial-gradient(
+      farthest-corner circle
+        at var(--pointer-x) var(--pointer-y),
+        hsla(0, 0%, 90%, 0.8) 0%,
+        hsla(0, 0%, 78%, 0.1) 25%,
+        hsl(0, 0%, 0%) 90%
+    );
+
+  background-position: center center;
+  background-size: cover;
+
+  mix-blend-mode: luminosity;
+  filter: brightness(0.6) contrast(4);
+}
+
+.card[data-rarity="rare holo"] .card__glare {
+  opacity: calc(var(--card-opacity) * 0.8);
+  filter: brightness(0.8) contrast(1.5);
+  mix-blend-mode: overlay;
+}
+
+.card[data-rarity="rare holo"] .card__glare::after {
+  content: "";
+
+  background-image:
+    radial-gradient(
+      farthest-corner circle at var(--pointer-x) var(--pointer-y),
+      hsl(180, 100%, 95%) 5%,
+      hsla(0, 0%, 39%, 0.25) 55%,
+      hsla(0, 0%, 0%, 0.36) 110%
+    );
+
+  mix-blend-mode: overlay;
+  filter: brightness(0.6) contrast(3);
+}
+
+@media screen and (max-width: 900px) {
+  .card[data-rarity="rare holo"] .card__shine {
+    --scanlines-space: 0.5px;
+  }
+}
+
+/* ============ COSMOS ============ */
+
+.card[data-rarity="rare holo cosmos"] .card__shine {
+  --space: 4%;
+
+  clip-path: var(--clip);
+
+  background-image:
+    url("/assets/cosmos-bottom.png"),
+    repeating-linear-gradient(82deg,
+      hsl(53, 65%, 60%) calc(var(--space) * 1),
+      hsl(93, 56%, 50%) calc(var(--space) * 2),
+      hsl(176, 54%, 49%) calc(var(--space) * 3),
+      hsl(228, 59%, 55%) calc(var(--space) * 4),
+      hsl(283, 60%, 55%) calc(var(--space) * 5),
+      hsl(326, 59%, 51%) calc(var(--space) * 6),
+      hsl(326, 59%, 51%) calc(var(--space) * 7),
+      hsl(283, 60%, 55%) calc(var(--space) * 8),
+      hsl(228, 59%, 55%) calc(var(--space) * 9),
+      hsl(176, 54%, 49%) calc(var(--space) * 10),
+      hsl(93, 56%, 50%) calc(var(--space) * 11),
+      hsl(53, 65%, 60%) calc(var(--space) * 12)
+    ),
+    radial-gradient(
+      farthest-corner circle
+      at var(--pointer-x) var(--pointer-y),
+      hsla(180, 100%, 89%, 0.5) 5%,
+      hsla(180, 14%, 57%, 0.3) 40%,
+      hsl(0, 0%, 0%) 130%
+    );
+
+  background-blend-mode: color-burn, multiply;
+  background-position:
+    var(--cosmosbg, center center),
+    calc(10% + (var(--pointer-from-left) * 80%)) calc(10% + (var(--pointer-from-top) * 80%)),
+    center center;
+  background-size: cover, 400% 900%, cover;
+
+  filter: brightness(1) contrast(1) saturate(0.8);
+  mix-blend-mode: color-dodge;
+}
+
+.card[data-rarity="rare holo cosmos"] .card__shine::before {
+  content: "";
+  z-index: 2;
+
+  background-image:
+    url("/assets/cosmos-middle-trans.png"),
+    repeating-linear-gradient(82deg,
+      hsl(53, 65%, 60%) calc(var(--space) * 1),
+      hsl(93, 56%, 50%) calc(var(--space) * 2),
+      hsl(176, 54%, 49%) calc(var(--space) * 3),
+      hsl(228, 59%, 55%) calc(var(--space) * 4),
+      hsl(283, 60%, 55%) calc(var(--space) * 5),
+      hsl(326, 59%, 51%) calc(var(--space) * 6),
+      hsl(326, 59%, 51%) calc(var(--space) * 7),
+      hsl(283, 60%, 55%) calc(var(--space) * 8),
+      hsl(228, 59%, 55%) calc(var(--space) * 9),
+      hsl(176, 54%, 49%) calc(var(--space) * 10),
+      hsl(93, 56%, 50%) calc(var(--space) * 11),
+      hsl(53, 65%, 60%) calc(var(--space) * 12)
+    );
+
+  background-blend-mode: lighten, multiply;
+  background-position:
+    var(--cosmosbg, center center),
+    calc(15% + (var(--pointer-from-left) * 70%)) calc(15% + (var(--pointer-from-top) * 70%)),
+    center center;
+  background-size: cover, 400% 900%, cover;
+
+  filter: brightness(1.25) contrast(1.75) saturate(0.8);
+  mix-blend-mode: overlay;
+}
+
+.card[data-rarity="rare holo cosmos"] .card__shine::after {
+  content: "";
+  z-index: 3;
+
+  background-image:
+    url("/assets/cosmos-top-trans.png"),
+    repeating-linear-gradient(82deg,
+      hsl(53, 65%, 60%) calc(var(--space) * 1),
+      hsl(93, 56%, 50%) calc(var(--space) * 2),
+      hsl(176, 54%, 49%) calc(var(--space) * 3),
+      hsl(228, 59%, 55%) calc(var(--space) * 4),
+      hsl(283, 60%, 55%) calc(var(--space) * 5),
+      hsl(326, 59%, 51%) calc(var(--space) * 6),
+      hsl(326, 59%, 51%) calc(var(--space) * 7),
+      hsl(283, 60%, 55%) calc(var(--space) * 8),
+      hsl(228, 59%, 55%) calc(var(--space) * 9),
+      hsl(176, 54%, 49%) calc(var(--space) * 10),
+      hsl(93, 56%, 50%) calc(var(--space) * 11),
+      hsl(53, 65%, 60%) calc(var(--space) * 12)
+    );
+
+  background-blend-mode: multiply, multiply;
+  background-position:
+    var(--cosmosbg, center center),
+    calc(20% + (var(--pointer-from-left) * 60%)) calc(20% + (var(--pointer-from-top) * 60%)),
+    center center;
+  background-size: cover, 400% 900%, cover;
+
+  filter: brightness(1.25) contrast(1.75) saturate(0.8);
+  mix-blend-mode: multiply;
+}
+
+.card[data-rarity="rare holo cosmos"] .card__glare {
+  background-image:
+    radial-gradient(
+      farthest-corner circle at var(--pointer-x) var(--pointer-y),
+      hsla(204, 100%, 95%, 0.8) 5%,
+      hsla(250, 15%, 20%, 1) 150%
+    );
+  filter: brightness(0.75) contrast(2) saturate(2);
+  mix-blend-mode: overlay;
+  opacity: calc(var(--card-opacity) * (0.25 + var(--pointer-from-center)));
+}
+
+.card[data-rarity="rare holo cosmos"] .card__glare::after {
+  content: "";
+
+  background-image:
+    radial-gradient(farthest-corner circle at
+      var(--pointer-x) var(--pointer-y),
+      hsl(280, 100%, 96%) 5%,
+      hsl(0, 0%, 10%) 60%
+    );
+
+  filter: brightness(0.75) contrast(2.5) saturate(2);
+  mix-blend-mode: soft-light;
+  opacity: calc(1 - var(--pointer-from-top) * 0.75);
+}
+
+/* ============ SHINY V ============ */
+
+.card[data-rarity="rare shiny v"] .card__shine,
+.card[data-rarity="rare shiny v"] .card__shine::after {
+  --space: 5%;
+  --angle: 133deg;
+  --imgsize: cover;
+
+  background-image:
+    var(--foil),
+    repeating-linear-gradient(0deg,
+      var(--sunpillar-clr-1) calc(var(--space) * 1),
+      var(--sunpillar-clr-2) calc(var(--space) * 2),
+      var(--sunpillar-clr-3) calc(var(--space) * 3),
+      var(--sunpillar-clr-4) calc(var(--space) * 4),
+      var(--sunpillar-clr-5) calc(var(--space) * 5),
+      var(--sunpillar-clr-6) calc(var(--space) * 6),
+      var(--sunpillar-clr-1) calc(var(--space) * 7)
+    ),
+    repeating-linear-gradient(
+      var(--angle),
+      #0e152e 0%,
+      hsl(180, 10%, 60%) 3.8%,
+      hsl(180, 29%, 66%) 4.5%,
+      hsl(180, 10%, 60%) 5.2%,
+      #0e152e 10%,
+      #0e152e 12%
+    ),
+    radial-gradient(
+      farthest-corner circle
+      at var(--pointer-x) var(--pointer-y),
+      hsla(0, 0%, 0%, 0.1) 12%,
+      hsla(0, 0%, 0%, 0.15) 20%,
+      hsla(0, 0%, 0%, 0.25) 120%
+    );
+
+  background-position:
+    center center,
+    0% var(--background-y),
+    calc(var(--background-x) + (var(--background-y) * 0.2)) var(--background-y),
+    var(--background-x) var(--background-y);
+
+  background-blend-mode: soft-light, hue, hard-light;
+  background-size: var(--imgsize), 200% 700%, 300% 100%, 200% 100%;
+
+  filter: brightness(calc((var(--pointer-from-center) * 0.4) + 0.4)) contrast(1.4) saturate(2.25);
+}
+
+.card[data-rarity="rare shiny v"] .card__shine::after {
+  content: "";
+
+  background-position:
+    center center,
+    0% var(--background-y),
+    calc((var(--background-x) + (var(--background-y) * 0.2)) * -1) calc(var(--background-y) * -1),
+    var(--background-x) var(--background-y);
+
+  background-size: var(--imgsize), 200% 400%, 195% 100%, 200% 100%;
+
+  filter: brightness(calc((var(--pointer-from-center) * 0.4) + 0.8)) contrast(1.5) saturate(1.25);
+  mix-blend-mode: exclusion;
+}
+
+.card[data-rarity="rare shiny v"] .card__shine::before {
+  content: "";
+  mask-image: none;
+  -webkit-mask-image: none;
+
+  background-image:
+    radial-gradient(farthest-corner circle at var(--pointer-x) var(--pointer-y),
+      hsl(0, 0%, 100%) 0%,
+      hsla(0, 0%, 0%, 0) 40%
+    );
+  background-position: center;
+  background-size: cover;
+  mix-blend-mode: overlay;
+
+  opacity: 0.75;
+  z-index: 1;
+}
+
+.card[data-rarity="rare shiny v"] .card__glare {
+  background-image:
+    radial-gradient(farthest-corner circle at var(--pointer-x) var(--pointer-y),
+      hsl(0, 0%, 90%) 5%,
+      hsl(200, 5%, 45%) 80%,
+      hsl(320, 40%, 10%) 150%
+    );
+
+  background-size: 120% 140%;
+  background-position: center center;
+
+  mix-blend-mode: darken;
+  filter: brightness(0.88) contrast(2.25) saturate(0.7);
+
+  opacity: calc(var(--card-opacity) * var(--pointer-from-center) * 0.75);
+}
+
+/* variante sin máscara: textura de ilusión */
+.card[data-rarity="rare shiny v"] .card__shine,
+.card[data-rarity="rare shiny v"] .card__shine::after {
+  --foil: url("/assets/illusion.png");
+  --imgsize: 33%;
+
+  background-blend-mode: exclusion, hue, hard-light;
+  filter: brightness(calc((var(--pointer-from-center) * 0.3) + 0.35)) contrast(2) saturate(1.5);
+}
+
+.card[data-rarity="rare shiny v"] .card__shine::after {
+  filter: brightness(calc((var(--pointer-from-center) * 0.5) + 0.8)) contrast(1.6) saturate(1.4);
+}
+
+/* ============ ARCOÍRIS (SECRETO) ============ */
+
+.card[data-rarity="rare rainbow"] .card__shine {
+  --r-clr-1: hsl(0, 57%, 37%);
+  --r-clr-2: hsl(40, 53%, 39%);
+  --r-clr-3: hsl(90, 60%, 35%);
+  --r-clr-4: hsl(180, 60%, 35%);
+  --r-clr-5: hsl(180, 60%, 35%);
+  --r-clr-6: hsl(210, 57%, 39%);
+  --r-clr-7: hsl(280, 55%, 31%);
+
+  background-image:
+    linear-gradient(-45deg, var(--r-clr-1), var(--r-clr-5)),
+    var(--glitter),
+    linear-gradient(-30deg,
+      var(--r-clr-1), var(--r-clr-2), var(--r-clr-3), var(--r-clr-4), var(--r-clr-5), var(--r-clr-6), var(--r-clr-7),
+      var(--r-clr-1), var(--r-clr-2), var(--r-clr-3), var(--r-clr-4), var(--r-clr-5), var(--r-clr-6), var(--r-clr-7),
+      var(--r-clr-1), var(--r-clr-2), var(--r-clr-3), var(--r-clr-4), var(--r-clr-5), var(--r-clr-6), var(--r-clr-7),
+      var(--r-clr-1)
+    );
+
+  background-blend-mode: luminosity, soft-light;
+
+  background-size:
+    200% 200%,
+    var(--glittersize) var(--glittersize),
+    400% 400%;
+
+  background-position:
+    calc(25% + (50% * var(--pointer-from-left))) calc(25% + (50% * var(--pointer-from-top))),
+    center center,
+    calc(25% + (var(--pointer-x) / 2)) calc(25% + (var(--pointer-y) / 2));
+
+  filter: brightness(calc((var(--pointer-from-center) * 0.25) + 0.6)) contrast(2.2) saturate(0.75);
+}
+
+.card[data-rarity="rare rainbow"] .card__shine::after {
+  content: "";
+
+  mask-image: none !important;
+  -webkit-mask-image: none !important;
+
+  background-image:
+    var(--glitter),
+    linear-gradient(-60deg,
+      var(--r-clr-1), var(--r-clr-2), var(--r-clr-3), var(--r-clr-4), var(--r-clr-5), var(--r-clr-6), var(--r-clr-7),
+      var(--r-clr-1), var(--r-clr-2), var(--r-clr-3), var(--r-clr-4), var(--r-clr-5), var(--r-clr-6), var(--r-clr-7),
+      var(--r-clr-1), var(--r-clr-2), var(--r-clr-3), var(--r-clr-4), var(--r-clr-5), var(--r-clr-6), var(--r-clr-7),
+      var(--r-clr-1)
+    );
+
+  background-blend-mode: soft-light;
+  background-size: var(--glittersize) var(--glittersize), 400% 400%;
+  background-position: center center, var(--pointer-x) var(--pointer-y);
+
+  filter: brightness(calc((var(--pointer-from-center) * 0.3) + 0.55)) contrast(2) saturate(1);
+  mix-blend-mode: color-dodge;
+}
+
+.card[data-rarity="rare rainbow"] .card__shine::before {
+  content: "";
+
+  background-image: var(--foil);
+  background-size: var(--imgsize);
+  background-position: center center;
+  filter: brightness(2.5) contrast(1);
+
+  opacity: calc((var(--pointer-from-center) + 0.4) * 0.6);
+  background-blend-mode: difference;
+  mix-blend-mode: darken;
+}
+
+.card[data-rarity="rare rainbow"] .card__glare {
+  background-image:
+    radial-gradient(
+      farthest-corner circle at var(--pointer-x) var(--pointer-y),
+      hsl(0, 0%, 80%),
+      hsla(187, 10%, 85%, 0.25) 30%,
+      hsl(197, 6%, 25%) 120%
+    );
+
+  filter: brightness(0.9) contrast(1.75);
+  opacity: calc(var(--pointer-from-center) * 0.9);
+  mix-blend-mode: hard-light;
+}
+
+/* variante sin máscara */
+.card[data-rarity="rare rainbow"] .card__shine {
+  --foil: url("/assets/illusion-mask.png");
+  --imgsize: 33%;
+}
+
+/* ============ VMAX ============ */
+
+.card[data-rarity="rare holo vmax"] .card__shine,
+.card[data-rarity="rare holo vmax"] .card__shine::after {
+  --foil: url("/assets/vmaxbg.jpg");
+  --imgsize: 60% 30%;
+}
+
+.card[data-rarity="rare holo vmax"] .card__shine {
+  --space: 6%;
+  --angle: 133deg;
+  --imgsize: cover;
+
+  background-image:
+    var(--foil),
+    repeating-linear-gradient(-33deg,
+      hsl(2, 70%, 47%) calc(var(--space) * 1),
+      hsl(228, 60%, 64%) calc(var(--space) * 2),
+      hsl(176, 55%, 39%) calc(var(--space) * 3),
+      hsl(123, 68%, 35%) calc(var(--space) * 4),
+      hsl(283, 75%, 57%) calc(var(--space) * 5),
+      hsl(2, 70%, 47%) calc(var(--space) * 6)
+    ),
+    repeating-linear-gradient(
+      var(--angle),
+      hsla(227, 53%, 12%, 0.5) 0%,
+      hsl(180, 10%, 50%) 2.5%,
+      hsl(83, 50%, 35%) 5%,
+      hsl(180, 10%, 50%) 7.5%,
+      hsla(227, 53%, 12%, 0.5) 10%,
+      hsla(227, 53%, 12%, 0.5) 15%
+    ),
+    radial-gradient(
+      farthest-corner circle
+      at var(--pointer-x) var(--pointer-y),
+      hsla(189, 76%, 77%, 0.6) 0%,
+      hsla(147, 59%, 77%, 0.6) 25%,
+      hsla(271, 55%, 69%, 0.6) 50%,
+      hsla(355, 56%, 72%, 0.6) 75%
+    );
+
+  background-blend-mode: difference, luminosity, soft-light;
+  background-size: var(--imgsize), 1100% 1100%, 600% 600%, 200% 200%;
+  background-position:
+    center,
+    var(--background-x) var(--background-y),
+    var(--background-x) var(--background-y),
+    var(--background-x) var(--background-y);
+
+  filter: brightness(calc((var(--pointer-from-center) * 0.4) + 0.4)) contrast(2) saturate(1);
+}
+
+.card[data-rarity="rare holo vmax"] .card__shine::after {
+  content: "";
+
+  background-image:
+    repeating-linear-gradient(0deg,
+      var(--sunpillar-clr-1) calc(var(--space) * 1),
+      var(--sunpillar-clr-2) calc(var(--space) * 2),
+      var(--sunpillar-clr-3) calc(var(--space) * 3),
+      var(--sunpillar-clr-4) calc(var(--space) * 4),
+      var(--sunpillar-clr-5) calc(var(--space) * 5),
+      var(--sunpillar-clr-6) calc(var(--space) * 6),
+      var(--sunpillar-clr-1) calc(var(--space) * 7)
+    ),
+    repeating-linear-gradient(
+      var(--angle),
+      #0e152e 0%,
+      hsl(180, 10%, 60%) 3.8%,
+      hsl(180, 29%, 66%) 4.5%,
+      hsl(180, 10%, 60%) 5.2%,
+      #0e152e 10%,
+      #0e152e 12%
+    );
+
+  background-blend-mode: hue, hard-light;
+  background-size: 200% 700%, 300% 100%, 200% 100%;
+  background-position:
+    0% var(--background-y),
+    var(--background-x) var(--background-y),
+    var(--background-x) var(--background-y);
+
+  mix-blend-mode: lighten;
+  opacity: calc((0.3 * var(--card-opacity)) + var(--card-opacity) * var(--pointer-from-center) * 0.5);
+  filter: saturate(1.5);
+}
+
+.card[data-rarity="rare holo vmax"] .card__glare {
+  mix-blend-mode: hard-light;
+  filter: brightness(1) contrast(1);
+
+  background-image:
+    radial-gradient(
+      farthest-corner circle at
+      var(--pointer-x) var(--pointer-y),
+      hsla(0, 0%, 100%, 0.75) 0%,
+      hsl(0, 0%, 0%) 120%
+    );
+
+  opacity: calc((0.2 * var(--card-opacity)) + var(--card-opacity) * var(--pointer-from-center) * 0.8);
+}

@@ -1,0 +1,103 @@
+/* Layout de la app: pantalla completa oscura, carta centrada y fija */
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  overscroll-behavior: none;
+}
+
+body {
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  background:
+    radial-gradient(ellipse at 50% 30%, hsl(228, 25%, 16%) 0%, hsl(230, 30%, 7%) 70%);
+  color: white;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.escenario {
+  height: 100dvh;
+  display: grid;
+  grid-template-rows: auto 1fr auto auto;
+  justify-items: center;
+  align-items: center;
+  padding: max(12px, env(safe-area-inset-top)) 16px max(12px, env(safe-area-inset-bottom));
+  gap: 8px;
+}
+
+.titulo {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 300;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  opacity: 0.6;
+}
+
+.card {
+  /* la carta ocupa el mayor espacio posible sin deformarse */
+  width: min(78vw, calc((100dvh - 210px) * 0.718));
+  max-width: 420px;
+}
+
+.estado {
+  margin: 0;
+  font-size: 0.75rem;
+  padding: 4px 12px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+  opacity: 0.85;
+  transition: background 0.3s ease;
+}
+
+.estado.ok {
+  background: rgba(33, 233, 133, 0.18);
+  color: hsl(152, 90%, 70%);
+}
+
+.estado.error {
+  background: rgba(248, 14, 53, 0.18);
+  color: hsl(350, 90%, 72%);
+}
+
+.controles {
+  display: grid;
+  gap: 10px;
+  justify-items: center;
+  width: 100%;
+}
+
+.efectos {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 6px;
+}
+
+.efecto,
+.recentrar {
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  background: rgba(255, 255, 255, 0.06);
+  color: white;
+  font-size: 0.8rem;
+  padding: 8px 14px;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+.efecto.activo {
+  background: rgba(13, 189, 233, 0.25);
+  border-color: hsl(192, 97%, 60%);
+}
+
+.efecto:active,
+.recentrar:active {
+  transform: scale(0.96);
+}
