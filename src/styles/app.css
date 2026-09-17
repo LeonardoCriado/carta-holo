@@ -101,3 +101,43 @@ body {
 .recentrar:active {
   transform: scale(0.96);
 }
+
+/* Modo fullscreen: la carta llena la pantalla, sin título/estado/controles */
+body.fullscreen .escenario {
+  grid-template-rows: 1fr;
+  padding: 0;
+  gap: 0;
+}
+
+body.fullscreen .titulo,
+body.fullscreen .estado,
+body.fullscreen .controles {
+  display: none;
+}
+
+body.fullscreen .card {
+  width: min(92vw, calc(100dvh * 0.718));
+  max-width: none;
+}
+
+.salir-fullscreen {
+  position: fixed;
+  top: max(10px, env(safe-area-inset-top));
+  right: max(10px, env(safe-area-inset-right));
+  z-index: 10;
+  width: 40px;
+  height: 40px;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 999px;
+  background: rgba(16, 19, 28, 0.6);
+  color: white;
+  font-size: 1rem;
+  line-height: 1;
+  cursor: pointer;
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+}
+
+.salir-fullscreen:active {
+  transform: scale(0.94);
+}

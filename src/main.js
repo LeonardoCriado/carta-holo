@@ -32,6 +32,37 @@ btnRecentrar.addEventListener("click", () => {
   setEstado("ok", "Centro recalibrado");
 });
 
+// Modo fullscreen: tap en la carta maximiza sin controles; tap de nuevo sale
+const btnSalir = document.getElementById("btn-salir-fullscreen");
+
+const setFullscreen = (activo) => {
+  document.body.classList.toggle("fullscreen", activo);
+  btnSalir.hidden = !activo;
+};
+
+card.addEventListener("click", () => {
+  const activo = !document.body.classList.contains("fullscreen");
+  setFullscreen(activo);
+  // Fullscreen API real: oculta la barra del navegador (requiere gesto del usuario)
+  if (activo && document.documentElement.requestFullscreen) {
+    document.documentElement.requestFullscreen().catch(() => {});
+  } else if (!activo && document.fullscreenElement) {
+    document.exitFullscreen().catch(() => {});
+  }
+});
+
+btnSalir.addEventListener("click", () => {
+  setFullscreen(false);
+  if (document.fullscreenElement) {
+    document.exitFullscreen().catch(() => {});
+  }
+});
+
+// Si el usuario sale con el botón atrás del sistema, sincronizar el estado
+document.addEventListener("fullscreenchange", () => {
+  if (!document.fullscreenElement) setFullscreen(false);
+});
+
 // Service worker (solo en contexto seguro: https o localhost)
 if ("serviceWorker" in navigator && window.isSecureContext) {
   window.addEventListener("load", () => {
