@@ -2,6 +2,7 @@ import "./styles/app.css";
 import "./styles/card.css";
 import "./styles/effects.css";
 import { createHoloController } from "./lib/orientation.js";
+import { createHoloGL } from "./lib/holo-webgl.js";
 
 const card = document.getElementById("carta");
 const estado = document.getElementById("estado-sensores");
@@ -14,8 +15,18 @@ const setEstado = (tipo, mensaje) => {
   estado.classList.toggle("error", tipo === "error");
 };
 
-const controller = createHoloController(card, { onStatus: setEstado });
+const canvasGL = document.querySelector(".card__gl");
+const gl = createHoloGL(canvasGL, () => card.classList.add("gl-active"));
+const controller = createHoloController(card, {
+  onStatus: setEstado,
+  onUpdate: gl?.update,
+});
 controller.start();
+
+if (gl) {
+  const resizeObserver = new ResizeObserver(gl.resize);
+  resizeObserver.observe(card);
+}
 
 // Selector de efecto holo
 botonesEfecto.forEach((btn) => {
@@ -23,6 +34,7 @@ botonesEfecto.forEach((btn) => {
     botonesEfecto.forEach((b) => b.classList.remove("activo"));
     btn.classList.add("activo");
     card.dataset.rarity = btn.dataset.effect;
+    gl?.setEffect(btn.dataset.effect);
   });
 });
 
