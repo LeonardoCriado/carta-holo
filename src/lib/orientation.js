@@ -71,7 +71,9 @@ export function createHoloController(card, { onStatus } = {}) {
     }
   };
 
-  /** Bucle de animación con suavizado exponencial (independiente de FPS). */
+  /** Bucle de animación con suavizado exponencial (independiente de FPS).
+      Se auto-pausa cuando el efecto llegó al objetivo: sin movimiento no
+      hay repaint, clave para no quemar GPU en celulares. */
   const tick = (t) => {
     const dt = Math.min((t - lastTime) / 1000, 0.1);
     lastTime = t;
@@ -79,7 +81,26 @@ export function createHoloController(card, { onStatus } = {}) {
     current.x += (target.x - current.x) * k;
     current.y += (target.y - current.y) * k;
     aplicarVars();
+
+    const dx = Math.abs(target.x - current.x);
+    const dy = Math.abs(target.y - current.y);
+    if (dx < 0.05 && dy < 0.05) {
+      // llegó al objetivo: snap final y pausa hasta el próximo cambio
+      current.x = target.x;
+      current.y = target.y;
+      aplicarVars();
+      rafId = null;
+      return;
+    }
     rafId = requestAnimationFrame(tick);
+  };
+
+  /** Reanuda el bucle si está pausado. */
+  const despertar = () => {
+    if (rafId === null) {
+      lastTime = performance.now();
+      rafId = requestAnimationFrame(tick);
+    }
   };
 
   /**
@@ -115,6 +136,7 @@ export function createHoloController(card, { onStatus } = {}) {
     if (!usandoPuntero) {
       target.x = adjust(clamp(rel.x, -LIMIT_X, LIMIT_X), -LIMIT_X, LIMIT_X, 0, 100);
       target.y = adjust(clamp(rel.y, -LIMIT_Y, LIMIT_Y), -LIMIT_Y, LIMIT_Y, 0, 100);
+      despertar();
     }
 
     if (!sensorActivo) {
@@ -130,6 +152,7 @@ export function createHoloController(card, { onStatus } = {}) {
     usandoPuntero = true;
     target.x = clamp(((e.clientX - rect.left) / rect.width) * 100);
     target.y = clamp(((e.clientY - rect.top) / rect.height) * 100);
+    despertar();
   };
 
   const handlePointerEnd = () => {
@@ -199,6 +222,7 @@ export function createHoloController(card, { onStatus } = {}) {
   /** Toma la posición actual del teléfono como nuevo centro del efecto. */
   const recenter = () => {
     base = null;
+    despertar();
   };
 
   const stop = () => {

@@ -115,6 +115,8 @@
 .card__glare {
   /* acota el repaint a la capa: clave para 60fps en GPU móvil */
   contain: layout paint;
+  /* capa propia de GPU: el blend se aplica sin repintar el fondo */
+  will-change: transform;
 }
 
 .card__shine {
