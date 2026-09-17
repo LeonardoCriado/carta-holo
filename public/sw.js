@@ -1,5 +1,5 @@
 // Service worker mínimo: cache-first para los assets de la app.
-const CACHE = "carta-holo-v2";
+const CACHE = "carta-holo-v3";
 // Rutas relativas al scope del SW: funciona en la raíz (dev) y bajo
 // un subpath (GitHub Pages).
 const ASSETS = [
@@ -35,6 +35,29 @@ self.addEventListener("activate", (e) => {
 
 self.addEventListener("fetch", (e) => {
   if (e.request.method !== "GET") return;
+  const url = new URL(e.request.url);
+  // HTML siempre fresco (network-first): evita servir una versión vieja
+  // mientras el deploy se propaga; los assets van cache-first
+  const esHtml =
+    e.request.mode === "navigate" ||
+    url.pathname.endsWith("/") ||
+    url.pathname.endsWith(".html");
+
+  if (esHtml) {
+    e.respondWith(
+      fetch(e.request)
+        .then((res) => {
+          if (res.ok && res.type === "basic") {
+            const copia = res.clone();
+            caches.open(CACHE).then((c) => c.put(e.request, copia));
+          }
+          return res;
+        })
+        .catch(() => caches.match(e.request).then((hit) => hit || Response.error()))
+    );
+    return;
+  }
+
   e.respondWith(
     caches.match(e.request).then(
       (hit) =>
