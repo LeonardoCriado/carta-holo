@@ -16,9 +16,9 @@ const SMOOTHING = 8;
  * como al mirar una carta holo real desde distintos ángulos.
  *
  * @param {HTMLElement} card elemento .card al que se le aplican las variables
- * @param {{ onStatus?: (tipo: "ok" | "info" | "error", mensaje: string) => void }} opciones
+ * @param {{ onStatus?: (tipo: "ok" | "info" | "error", mensaje: string) => void, onUpdate?: (v: { x: number, y: number, fromCenter: number }) => void }} opciones
  */
-export function createHoloController(card, { onStatus } = {}) {
+export function createHoloController(card, { onStatus, onUpdate } = {}) {
   // posición objetivo (0-100) y posición suavizada actual
   const target = { x: 50, y: 50 };
   const current = { x: 50, y: 50 };
@@ -55,6 +55,13 @@ export function createHoloController(card, { onStatus } = {}) {
     const rx = Math.round(px * 10) / 10;
     const ry = Math.round(py * 10) / 10;
     const rdc = Math.round(desdeCentro * 100) / 100;
+
+    if (
+      onUpdate &&
+      (rx !== ultimo.px || ry !== ultimo.py || rdc !== ultimo.rdc)
+    ) {
+      onUpdate({ x: rx, y: ry, fromCenter: rdc });
+    }
 
     if (rx !== ultimo.px) {
       ultimo.px = rx;
