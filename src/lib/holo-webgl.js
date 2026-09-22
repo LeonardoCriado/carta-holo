@@ -39,27 +39,6 @@ vec3 hsv(vec3 c) {
   return c.z * mix(k.xxx, clamp(p - k.xxx, 0.0, 1.0), c.y);
 }
 
-vec3 sunpillar(float t) {
-  vec3 c1 = vec3(1.0, 0.48, 0.43);
-  vec3 c2 = vec3(1.0, 0.93, 0.41);
-  vec3 c3 = vec3(0.64, 1.0, 0.42);
-  vec3 c4 = vec3(0.42, 1.0, 0.98);
-  vec3 c5 = vec3(0.45, 0.58, 1.0);
-  vec3 c6 = vec3(0.84, 0.45, 1.0);
-  t = fract(t);
-  float segment = t * 6.0;
-  float index = floor(segment);
-  float f = fract(segment);
-  vec3 a = c1;
-  vec3 b = c2;
-  if (index >= 1.0) { a = c2; b = c3; }
-  if (index >= 2.0) { a = c3; b = c4; }
-  if (index >= 3.0) { a = c4; b = c5; }
-  if (index >= 4.0) { a = c5; b = c6; }
-  if (index >= 5.0) { a = c6; b = c1; }
-  return mix(a, b, smoothstep(0.0, 1.0, f));
-}
-
 float angleBands(vec2 uv, float angle, float scale, vec2 offset) {
   float r = radians(angle);
   vec2 p = uv - 0.5;
@@ -79,7 +58,8 @@ vec3 overlay(vec3 base, vec3 layer) {
 }
 
 void main() {
-  vec2 uv = v_uv;
+  // CSS y el sensor expresan Y desde arriba; WebGL interpola Y desde abajo.
+  vec2 uv = vec2(v_uv.x, 1.0 - v_uv.y);
   vec2 bg = u_background - 0.5;
   float glow = radial(uv, u_pointer, 1.15);
   float edge = smoothstep(0.0, 0.85, u_center);
@@ -87,43 +67,37 @@ void main() {
   float alpha = 0.0;
 
   if (u_effect == 0) {
-    // Regular holo de pokemon-cards-css: --holo, 400% de fondo y overlay.
-    float phase = angleBands(uv, 10.0, 3.8, vec2(bg.x + bg.y));
-    color = sunpillar(phase);
-    color = (color - 0.5) * 3.0 + 0.5;
-    color = clamp(color, 0.0, 1.0);
-
-    // Las dos capas de barras cruzadas del ::before.
-    float barA = step(0.72, fract(uv.x * 15.0 + bg.y * 2.4));
-    float barB = step(0.72, fract(uv.x * 15.0 - bg.y * 2.4));
-    float bars = max(barA, barB) * 0.35;
-    color = mix(color, vec3(0.92), bars);
-
-    // ::after y glare: reflejo blanco que sigue al punto de observación.
-    color = mix(color, vec3(0.95), glow * 0.36);
-    alpha = 0.52 + edge * 0.25 + glow * 0.2;
+    float phase = angleBands(uv, 110.0, 4.0, vec2(bg.x * 2.6 + bg.y * 3.5));
+    color = hsv(vec3(phase, 0.82, 1.0));
+    float scan = step(0.5, fract(uv.y * u_resolution.y / 4.0));
+    color = overlay(color, vec3(scan * 0.42));
+    // El ::after y el glare de rare holo son reflejos amplios, no un velo
+    // uniforme: concentralos en el punto de observación y en los bordes.
+    float rim = smoothstep(0.35, 0.95, distance(uv, vec2(0.5)));
+    color = mix(color, vec3(1.0), glow * 0.22);
+    alpha = 0.11 + edge * 0.18 + glow * 0.18 + rim * 0.04;
   } else if (u_effect == 1) {
     vec4 stars = texture2D(u_cosmos_bottom, uv);
     stars += texture2D(u_cosmos_middle, uv);
     stars += texture2D(u_cosmos_top, uv);
     float phase = angleBands(uv, 82.0, 4.0, vec2(bg.x + bg.y));
     color = mix(hsv(vec3(phase, 0.7, 0.9)), stars.rgb, 0.72);
-    alpha = 0.18 + edge * 0.25 + glow * 0.22;
+    alpha = 0.12 + edge * 0.20 + glow * 0.18;
   } else if (u_effect == 2) {
     vec3 foil = texture2D(u_illusion, fract(uv * 3.0 + bg)).rgb;
     float phase = angleBands(uv, 0.0, 2.0, vec2(bg.y * 3.0));
     color = mix(hsv(vec3(phase, 0.78, 1.0)), foil, 0.55);
-    alpha = 0.12 + edge * 0.25 + glow * 0.18;
+    alpha = 0.10 + edge * 0.20 + glow * 0.16;
   } else if (u_effect == 3) {
     vec3 glitter = texture2D(u_glitter, fract(uv * 4.0)).rgb;
     float phase = angleBands(uv, -30.0, 4.0, vec2(bg.x + bg.y));
     color = mix(hsv(vec3(phase, 0.72, 0.9)), glitter, 0.34);
-    alpha = 0.12 + edge * 0.24 + glow * 0.22;
+    alpha = 0.10 + edge * 0.20 + glow * 0.18;
   } else {
     vec3 foil = texture2D(u_vmax, fract(uv * vec2(1.66, 3.33) + bg)).rgb;
     float phase = angleBands(uv, -33.0, 6.0, vec2(bg.x * 2.0 + bg.y * 2.0));
     color = mix(hsv(vec3(phase, 0.78, 0.95)), foil, 0.65);
-    alpha = 0.14 + edge * 0.27 + glow * 0.24;
+    alpha = 0.11 + edge * 0.22 + glow * 0.20;
   }
 
   color = clamp(color * (0.72 + edge * 0.3) + vec3(glow * 0.16), 0.0, 1.0);
@@ -208,13 +182,17 @@ export function createHoloGL(canvas, onReady) {
     resolution: uniform("u_resolution"),
     effect: uniform("u_effect"),
   };
+  // import.meta.env.BASE_URL respeta el `base` de Vite ("/" en dev,
+  // "/carta-holo/" en GitHub Pages): las rutas absolutas "/assets/…"
+  // darían 404 bajo un subpath.
+  const base = import.meta.env?.BASE_URL ?? "/";
   const paths = [
-    ["glitter", "/assets/glitter.png"],
-    ["illusion", "/assets/illusion.png"],
-    ["cosmos_bottom", "/assets/cosmos-bottom.png"],
-    ["cosmos_middle", "/assets/cosmos-middle-trans.png"],
-    ["cosmos_top", "/assets/cosmos-top-trans.png"],
-    ["vmax", "/assets/vmaxbg.jpg"],
+    ["glitter", `${base}assets/glitter.png`],
+    ["illusion", `${base}assets/illusion.png`],
+    ["cosmos_bottom", `${base}assets/cosmos-bottom.png`],
+    ["cosmos_middle", `${base}assets/cosmos-middle-trans.png`],
+    ["cosmos_top", `${base}assets/cosmos-top-trans.png`],
+    ["vmax", `${base}assets/vmaxbg.jpg`],
   ];
   const textures = paths.map(([name, path], index) => {
     const item = texture(gl, path);

@@ -16,12 +16,37 @@ const setEstado = (tipo, mensaje) => {
 };
 
 const canvasGL = document.querySelector(".card__gl");
-const gl = createHoloGL(canvasGL, () => card.classList.add("gl-active"));
+const btnMotor = document.getElementById("btn-motor");
+
+// Motor del brillo conmutable: CSS puro (shine/glare) o canvas WebGL.
+// La clase `gl-active` oculta el CSS y muestra el canvas (ver card.css).
+let useGL = localStorage.getItem("holo-motor") !== "css";
+let glReady = false;
+const applyMotor = () => {
+  card.classList.toggle("gl-active", useGL && glReady);
+  btnMotor.textContent = `Motor: ${useGL ? "WebGL" : "CSS"}`;
+};
+const gl = createHoloGL(canvasGL, () => {
+  glReady = true;
+  applyMotor();
+});
+if (!gl && btnMotor) btnMotor.hidden = true;
 const controller = createHoloController(card, {
   onStatus: setEstado,
-  onUpdate: gl?.update,
+  // en modo CSS no se actualiza el canvas oculto (ahorra GPU)
+  onUpdate: (v) => {
+    if (useGL) gl?.update(v);
+  },
 });
 controller.start();
+applyMotor();
+
+btnMotor?.addEventListener("click", () => {
+  useGL = !useGL;
+  localStorage.setItem("holo-motor", useGL ? "webgl" : "css");
+  if (useGL) gl?.resize(); // repinta el canvas con los últimos valores
+  applyMotor();
+});
 
 if (gl) {
   const resizeObserver = new ResizeObserver(gl.resize);
@@ -44,7 +69,8 @@ btnRecentrar.addEventListener("click", () => {
   setEstado("ok", "Centro recalibrado");
 });
 
-// Modo fullscreen: tap en la carta maximiza sin controles; tap de nuevo sale
+// Modo fullscreen: tap en la carta maximiza sin controles; tap de nuevo sale.
+// Se ignora el tap si hubo arrastre (probar el holo no debe maximizar).
 const btnSalir = document.getElementById("btn-salir-fullscreen");
 
 const setFullscreen = (activo) => {
@@ -52,7 +78,17 @@ const setFullscreen = (activo) => {
   btnSalir.hidden = !activo;
 };
 
-card.addEventListener("click", () => {
+let downPos = null;
+card.addEventListener("pointerdown", (e) => {
+  downPos = { x: e.clientX, y: e.clientY };
+});
+card.addEventListener("click", (e) => {
+  if (downPos) {
+    const dx = e.clientX - downPos.x;
+    const dy = e.clientY - downPos.y;
+    downPos = null;
+    if (Math.hypot(dx, dy) > 8) return; // fue arrastre, no tap
+  }
   const activo = !document.body.classList.contains("fullscreen");
   setFullscreen(activo);
   // Fullscreen API real: oculta la barra del navegador (requiere gesto del usuario)

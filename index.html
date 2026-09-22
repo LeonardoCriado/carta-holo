@@ -11,9 +11,9 @@
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <title>Carta Holo</title>
-    <link rel="manifest" href="/manifest.webmanifest" />
-    <link rel="icon" type="image/png" href="/icons/icon-192.png" />
-    <link rel="apple-touch-icon" href="/icons/icon-192.png" />
+    <link rel="manifest" href="./manifest.webmanifest" />
+    <link rel="icon" type="image/png" href="./icons/icon-192.png" />
+    <link rel="apple-touch-icon" href="./icons/icon-192.png" />
   </head>
   <body>
     <main class="escenario">
@@ -33,7 +33,7 @@
         >
           <div class="card__front">
             <img
-              src="/assets/card.png"
+              src="./assets/card.png"
               alt="Carta Charizard VMAX"
               width="660"
               height="921"
@@ -42,8 +42,8 @@
             <canvas class="card__gl" aria-hidden="true"></canvas>
             <div class="card__shine"></div>
             <div class="card__glare"></div>
-          </button>
-        </div>
+          </div>
+        </button>
       </div>
 
       <p id="estado-sensores" class="estado" role="status">Iniciando sensores…</p>
@@ -62,6 +62,9 @@
         </div>
         <button id="btn-recentrar" class="recentrar" type="button">
           ⟳ Recentrar
+        </button>
+        <button id="btn-motor" class="recentrar" type="button">
+          Motor: WebGL
         </button>
       </nav>
     </main>
