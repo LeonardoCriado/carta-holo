@@ -153,23 +153,8 @@ body.fullscreen .card__rotator {
 
 .card.gl-active .card__gl {
   display: block;
-  mix-blend-mode: color-dodge;
-}
-
-.card.gl-active[data-rarity="rare holo cosmos"] .card__gl {
-  mix-blend-mode: overlay;
-}
-
-.card.gl-active[data-rarity="rare shiny v"] .card__gl {
-  mix-blend-mode: exclusion;
-}
-
-.card.gl-active[data-rarity="rare rainbow"] .card__gl {
-  mix-blend-mode: darken;
-}
-
-.card.gl-active[data-rarity="rare holo vmax"] .card__gl {
-  mix-blend-mode: lighten;
+  /* el canvas ya compone carta+holo dentro del shader: sin blend extra */
+  mix-blend-mode: normal;
 }
 
 .card.gl-active .card__shine,

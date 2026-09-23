@@ -6,7 +6,7 @@ PoC de app móvil (PWA) que emula el efecto holográfico de las cartas de Pokém
 
 ## Cómo funciona
 
-- Los efectos holo (capas `card__shine` y `card__glare`) son CSS puro, portados de [simeydotme/pokemon-cards-css](https://github.com/simeydotme/pokemon-cards-css).
+- Los efectos holo tienen dos motores conmutables (botón «Motor»): CSS puro (capas `card__shine` y `card__glare`, fiel a la referencia pero pesado en GPU móvil) y canvas WebGL ([src/lib/holo-webgl.js](src/lib/holo-webgl.js)), que compone carta + holo en el shader a 60fps, al estilo de [TiltHologramCard](https://github.com/DongGukMon/TiltHologramCard) con Skia.
 - El control por sensores sigue el enfoque de [DongGukMon/TiltHologramCard](https://github.com/DongGukMon/TiltHologramCard), pero con la `DeviceOrientationEvent` del navegador en lugar del giroscopio nativo.
 - El motor ([src/lib/orientation.js](src/lib/orientation.js)) mapea la inclinación del teléfono (±16°/±18°) a las variables CSS `--pointer-x/y` y `--background-x/y`, con:
   - **Calibración**: la primera lectura (o el botón «Recentrar») define el centro del efecto.
